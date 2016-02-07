@@ -8,30 +8,43 @@ import javax.swing.JOptionPane;
 import br.com.DnSystem.Conexao.Conexao;
 import br.com.DnSystem.Model.MLogon;
 import br.com.DnSystem.View.VHome;
+import br.com.DnSystem.View.VUsuario;
 
 public class DLogon {
 	public static int retorno; 
 	public DLogon(MLogon logon) {
 		// TODO Auto-generated constructor stub
 		try {
+			
 			Conexao conex = new Conexao();
 			conex.ConexaoMyql();
 
-			String sql= "select *from usuario where logon =? and senha =? ";
+			String sql= "select *from logon where usuario =? and senha =? ";
 			java.sql.PreparedStatement stm = conex.con.prepareStatement(sql);    
 			stm.setString(1, logon.getNome());  
 			stm.setString(2, logon.getSenha()); 
 			ResultSet res = stm.executeQuery();   
 
 			if(res.next()){
-				JOptionPane.showMessageDialog(null, "Bem Vindo  "+""+ res.getString("nome_usuario"));
+				JOptionPane.showMessageDialog(null, "Bem Vindo  "+""+ res.getString("usuario"));
 				VHome vhome = new VHome();
 				int i=0;
 				retorn(i);
 			}else{
-				JOptionPane.showMessageDialog(null, "Usuario ou Senha Inválido");
-				int i=1;
-				retorn(i);
+				int resposta = (JOptionPane.showConfirmDialog(null, "Usuario Não Possui cadastro. Deseja Cadastrar ?"));
+				if (resposta == 0){
+					VUsuario vusuario = new VUsuario();
+					int i=1;
+					retorn(i); 
+				}else if(resposta == 1){
+					int i=1;
+					retorn(i);
+					
+				}else {
+					int i=1;
+					retorn(i);
+				}
+				
 			}
 		}catch(SQLException ex){
 			JOptionPane.showMessageDialog(null,ex);
@@ -48,4 +61,7 @@ public class DLogon {
 		}
 		return retorno;
 	}
+//	public void FExisteBanco(){
+//		
+//	}
 }

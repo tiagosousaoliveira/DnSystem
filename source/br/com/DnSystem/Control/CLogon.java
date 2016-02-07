@@ -1,11 +1,15 @@
 package br.com.DnSystem.Control;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import javax.swing.JOptionPane;
 
 import br.com.DnSystem.Dao.DLogon;
 import br.com.DnSystem.Model.MLogon;
 
 public class CLogon{
+	private Socket cliente;
 	public int retorno = -1; 
 		public CLogon(MLogon logon){
 		// TODO Auto-generated constructor stub
@@ -18,6 +22,8 @@ public class CLogon{
 		}else {
 			
 			DLogon dlogon = new DLogon(logon);
+		//	cliente = new Socket("localhost" +3322,retorno);
+			
 			if(DLogon.retorno == 0){
 				int i=0;
 				retorn(i);
@@ -25,8 +31,8 @@ public class CLogon{
 				int i=1;
 				retorn(i);
 			}
-		}
 	}
+}
 	public int retorn(int i) {
 			// TODO Auto-generated constructor stub
 		if(i == 0){

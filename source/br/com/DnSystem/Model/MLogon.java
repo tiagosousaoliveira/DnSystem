@@ -19,7 +19,4 @@ public class MLogon {
 		this.senha = senha;
 	}
 	
-	
-
-
 }

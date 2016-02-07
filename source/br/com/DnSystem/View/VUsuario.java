@@ -2,36 +2,58 @@ package br.com.DnSystem.View;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 
+import br.com.DnSystem.Conexao.Conexao;
+import br.com.DnSystem.Control.CUsuario;
 import br.com.DnSystem.Funcoes.FCodigo;
 import br.com.DnSystem.Funcoes.FData;
+import br.com.DnSystem.Model.MUsuario;
 
 public class VUsuario extends JFrame {
 	
+	protected static final String JOptiionPane = null;
 	JMenuBar menu 		   					= new JMenuBar();
 	JPanel	 Local1							= new JPanel(); 
 	JPanel	 Local2							= new JPanel(); 
 	JPanel	 Local3							= new JPanel(); 
 	JPanel	 Local4							= new JPanel(); 
+	
+	Calendar data;
+	public static int dia;
+	public static int mes;
+	public static int ano;
+	private	      int sequencia;
+	private	      int seqparamento;
+	
 	private JTextField Tnome;
 	private JTextField TrazaoSocial;
 	private JTextField TCpf;
 	private JTextField TRg;
-	private JTextField RCep;
+	private JTextField TCep;
 	private JTextField Tcodigo;
 	private JTextField Tdata;
 	private JTextField Temail;
+	private JTextField Tusuario;
+	private JPasswordField Tsenha;
 	
-	public VUsuario(FCodigo codigo, FData data) {
+	public VUsuario() {
 		// TODO Auto-generated constructor stub
 	super("Tela de Usuario");
 	getContentPane().setLayout(null);
@@ -48,15 +70,15 @@ public class VUsuario extends JFrame {
     Local1.setLayout(null);
     Local1.setBorder(javax.swing.BorderFactory.createEtchedBorder()); 
     Local1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cadastro Cliente"));
-    Local1.setSize(901,61);
+    Local1.setSize(901,67);
     Local1.setLocation(57,94);
 	
 	Tnome = new JTextField();
-	Tnome.setBounds(122, 30, 451, 20);
+	Tnome.setBounds(122, 30, 451, 26);
 	Tnome.setColumns(10);
 	
 	JComboBox ComboTipo = new JComboBox();
-	ComboTipo.setBounds(666, 30, 126, 20);
+	ComboTipo.setBounds(666, 30, 126, 26);
 	JLabel lblNome = new JLabel("Nome");
 	lblNome.setBounds(48, 33, 46, 14);
 	JLabel lblTipo = new JLabel("Tipo");
@@ -73,18 +95,18 @@ public class VUsuario extends JFrame {
     Local2.setLayout(null);
     Local2.setBorder(javax.swing.BorderFactory.createEtchedBorder()); 
     Local2.setBorder(javax.swing.BorderFactory.createTitledBorder("Pessoa Juridica"));
-    Local2.setSize(901,126);
-    Local2.setLocation(57,157);
+    Local2.setSize(901,120);
+    Local2.setLocation(57,163);
     
     
 	TrazaoSocial = new JTextField();
-	TrazaoSocial.setBounds(123, 26, 453, 20);
+	TrazaoSocial.setBounds(123, 26, 453, 26);
 	TrazaoSocial.setColumns(10);
 	TCpf = new JTextField();
-	TCpf.setBounds(123, 57, 180, 20);
+	TCpf.setBounds(123, 57, 180, 26);
 	TCpf.setColumns(10);
 	TRg = new JTextField();
-	TRg.setBounds(123, 86, 180, 20);
+	TRg.setBounds(123, 86, 180, 26);
 	TRg.setColumns(10);
 	
 	JCheckBox chckbxIsento = new JCheckBox("Isento");
@@ -114,18 +136,18 @@ public class VUsuario extends JFrame {
     Local3.setSize(901,138);
     Local3.setLocation(57,284);
     
-	RCep = new JTextField();
-	RCep.setBounds(122, 21, 181, 20);
-	RCep.setColumns(10);
+    TCep = new JTextField();
+    TCep.setBounds(122, 21, 181, 26);
+    TCep.setColumns(10);
 	
 	JComboBox comboBox_1 = new JComboBox();
 	comboBox_1.setBounds(122, 57, 181, 20);
 	JComboBox comboBox_2 = new JComboBox();
 	comboBox_2.setBounds(393, 57, 181, 20);
 	JComboBox ComboBairro = new JComboBox();
-	ComboBairro.setBounds(122, 89, 181, 20);
+	ComboBairro.setBounds(122, 89, 181, 26);
 	JComboBox ComboLogradouro = new JComboBox();
-	ComboLogradouro.setBounds(393, 89, 181, 20);
+	ComboLogradouro.setBounds(393, 89, 181, 26);
 	JLabel lblCep = new JLabel("CEP");
 	lblCep.setBounds(66, 24, 46, 14);
 	JLabel lblEstado = new JLabel("Estado");
@@ -137,9 +159,9 @@ public class VUsuario extends JFrame {
 	JLabel lblLogradouro = new JLabel("Logradouro");
 	lblLogradouro.setBounds(315, 92, 68, 14);
 	JComboBox ComboEstado = new JComboBox();
-	ComboEstado.setBounds(122, 57, 181, 20);
+	ComboEstado.setBounds(122, 57, 181, 26);
 	JComboBox ComboCidade = new JComboBox();
-	ComboCidade.setBounds(393, 57, 181, 20);
+	ComboCidade.setBounds(393, 57, 181, 26);
 	
 	Local3.add(ComboCidade);
 	Local3.add(ComboEstado);
@@ -151,7 +173,7 @@ public class VUsuario extends JFrame {
 	Local3.add(ComboBairro);
 	Local3.add(lblBairro);
 	Local3.add(lblLogradouro);
-	Local3.add(RCep);
+	Local3.add(TCep);
 	
 	//Ultimo Container
 //===================================================================================================================================================================================
@@ -165,25 +187,50 @@ public class VUsuario extends JFrame {
 	
 
 	Temail = new JTextField();
-	Temail.setBounds(119, 21, 461, 20);
+	Temail.setBounds(119, 21, 461, 26);
 	Temail.setColumns(10);
 	
 	JLabel lblEmail = new JLabel("Email");
 	lblEmail.setBounds(61, 24, 46, 14);
 	
+    Tusuario = new JTextField();
+    Tusuario.setBounds(119, 76, 86, 26);
+    Tusuario.setColumns(10);
+	
+	Tsenha = new JPasswordField();
+	Tsenha.setBounds(313, 76, 86, 26);
+	Tsenha.setColumns(10);
+	
+	JLabel LUsuario = new JLabel("Usuario");
+	LUsuario.setBounds(61, 79, 46, 14);
+
+	JLabel LSenha = new JLabel("Senha");
+	LSenha.setBounds(255, 79, 46, 14);
+	
 	Local4.add(Temail);
 	Local4.add(lblEmail);
-	
+	Local4.add(Tusuario);
+	Local4.add(Tsenha);
+	Local4.add(LUsuario);
+	Local4.add(LSenha);
 	
 	
 	//COntainer Padrão
 //===================================================================================================================================================================================
-    Tcodigo = new JTextField();
-    Tcodigo.setBounds(57, 63, 86, 20);
+	sequencia = verificacao(seqparamento);
+	Tcodigo = new JTextField(""+sequencia);
+    Tcodigo.setBounds(57, 63, 86, 23);
     Tcodigo.setColumns(10);
+    Tcodigo.setEditable(false);
+
     
-    Tdata = new JTextField(data.dia + , + data.mes + , + data.ano);
-    Tdata.setBounds(872, 63, 86, 20);
+	data = Calendar.getInstance();		
+	dia = data.get(Calendar.DATE);					
+	mes = data.get(Calendar.MONTH);
+	ano = data.get(Calendar.YEAR);		
+	mes= mes+1;
+    Tdata = new JTextField(dia+" / "+mes+" / "+ano);
+    Tdata.setBounds(872, 63, 86, 23);
     Tdata.setColumns(10);
    
     JLabel lblCodigo = new JLabel("Codigo");
@@ -193,11 +240,44 @@ public class VUsuario extends JFrame {
     
     JButton BGravar = new JButton("Gravar");
     BGravar.setBounds(869, 561, 89, 23);
+    BGravar.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			MUsuario musuario = new MUsuario();
+			int cod = Integer.parseInt(Tcodigo.getText());
+			musuario.setTnome(Tnome.getText());
+			musuario.setTrazaoSocial(TrazaoSocial.getText());
+			musuario.setTCpf(TCpf.getText());
+			musuario.setTRg(TRg.getText());
+			musuario.setRCep(TCep.getText());
+			musuario.setTcodigo(cod);
+			musuario.setTdata(Tdata.getText());
+			musuario.setTemail(Temail.getText());
+			musuario.setTUsuario(Tusuario.getText());
+			musuario.setTSenha(Tsenha.getText());
+			
+			CUsuario cusuario = new CUsuario(musuario);
+			if(cusuario.retorno == 0){
+				JOptionPane.showMessageDialog(null,"Gravar If inicial");
+			}else{
+				JOptionPane.showMessageDialog(null,"Gravar If Secundario");
+			}
+			
+		}
+	});
+    
     JButton BCancelar = new JButton("Cancelar");
     BCancelar.setBounds(748, 561, 89, 23);
-    
-    
-    
+    BCancelar.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	});
+	
+	getContentPane().add(menu);
     getContentPane().add(Tdata);
     getContentPane().add(lblDataCadastro);
     getContentPane().add(lblCodigo);
@@ -208,9 +288,7 @@ public class VUsuario extends JFrame {
 	getContentPane().add(Local2);
 	getContentPane().add(Local3);
 	getContentPane().add(Local4);
-    getContentPane().add(menu);
-    
-
+	
 	
     Dimension ds = Toolkit.getDefaultToolkit().getScreenSize();  
     Dimension dw = getSize(); 
@@ -221,4 +299,34 @@ public class VUsuario extends JFrame {
 	setLocationRelativeTo(null);
 	setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 	}
+	public int verificacao(int sequencia ){
+		Conexao conexao = new Conexao();
+		conexao.ConexaoMyql();
+		
+			for(int i = 1; i < 100000; i++){
+				try{
+					String SQL = "select *from usuario where codigo=?";
+					java.sql.PreparedStatement stm = conexao.con.prepareStatement(SQL);
+					stm.setInt(1,i);
+					ResultSet rs = stm.executeQuery();
+					
+					if(rs.next()){
+						String t = rs.getString("codigo");
+						int s = Integer.parseInt(t);
+						if (i > s){
+							sequencia = i;
+							return sequencia;
+						}else{
+							sequencia++;
+						}
+					}else{
+						sequencia = i;
+						return sequencia;
+					}
+				}catch(SQLException e ){
+					JOptionPane.showMessageDialog(null, "Busca Não Retornou Dados");
+				}
+			}
+			return sequencia;
+   }
 }
